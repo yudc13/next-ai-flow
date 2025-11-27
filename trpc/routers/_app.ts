@@ -1,5 +1,6 @@
 import { createTRPCRouter, protectedProcedure } from '../init'
 import prisma from '@/lib/prisma'
+import { workflowRouter } from './workflow'
 export const appRouter = createTRPCRouter({
 	user: protectedProcedure.query(async ({ ctx }) => {
 		const user = await prisma.user.findUnique({
@@ -7,6 +8,7 @@ export const appRouter = createTRPCRouter({
 		})
 		return user
 	}),
+	workflow: workflowRouter,
 })
-// export type definition of API
+
 export type AppRouter = typeof appRouter
