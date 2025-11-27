@@ -3,6 +3,10 @@
     "Neon": {
       "url": "https://mcp.neon.tech/mcp",
       "type": "http"
+    },
+    "Sentry": {
+      "url": "https://mcp.sentry.dev/mcp/yudc/react-demo",
+      "type": "http"
     }
   },
   "inputs": []
