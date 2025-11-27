@@ -1,11 +1,9 @@
-import { LoginForm } from '@/app/features/auth/login-form'
+import { LoginForm } from '@/features/auth/login-form'
+import { requiredUnAuth } from '@/lib/auth-utils'
 
-const SignInPage = () => {
-	return (
-		<div>
-			<LoginForm />
-		</div>
-	)
+const SignInPage = async () => {
+	await requiredUnAuth()
+	return <LoginForm />
 }
 
 export default SignInPage

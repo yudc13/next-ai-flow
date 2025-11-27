@@ -1,17 +1,12 @@
-import { z } from 'zod'
-import { baseProcedure, createTRPCRouter } from '../init'
+import { createTRPCRouter, protectedProcedure } from '../init'
+import prisma from '@/lib/prisma'
 export const appRouter = createTRPCRouter({
-	hello: baseProcedure
-		.input(
-			z.object({
-				text: z.string(),
-			}),
-		)
-		.query((opts) => {
-			return {
-				greeting: `hello ${opts.input.text}`,
-			}
-		}),
+	user: protectedProcedure.query(async ({ ctx }) => {
+		const user = await prisma.user.findUnique({
+			where: { id: ctx.auth.user.id },
+		})
+		return user
+	}),
 })
 // export type definition of API
 export type AppRouter = typeof appRouter

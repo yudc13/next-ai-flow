@@ -1,11 +1,12 @@
-import { initTRPC } from '@trpc/server'
+import { getSession } from '@/lib/auth-utils'
+import { initTRPC, TRPCError } from '@trpc/server'
 import { cache } from 'react'
 import superjson from 'superjson'
 export const createTRPCContext = cache(async () => {
 	/**
 	 * @see: https://trpc.io/docs/server/context
 	 */
-	return { userId: 'user_123' }
+	return await getSession()
 })
 // Avoid exporting the entire t-object
 // since it's not very descriptive.
@@ -21,3 +22,13 @@ const t = initTRPC.create({
 export const createTRPCRouter = t.router
 export const createCallerFactory = t.createCallerFactory
 export const baseProcedure = t.procedure
+export const protectedProcedure = baseProcedure.use(async ({ ctx, next }) => {
+	const session = await getSession()
+	if (!session) {
+		throw new TRPCError({
+			code: 'UNAUTHORIZED',
+			message: 'You must be logged in to access this resource.',
+		})
+	}
+	return next({ ctx: { ...ctx, auth: session } })
+})

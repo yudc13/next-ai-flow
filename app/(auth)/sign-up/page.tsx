@@ -1,13 +1,11 @@
 'use client'
 
-import { RegisterForm } from '@/app/features/auth/register-form'
+import { RegisterForm } from '@/features/auth/register-form'
+import { requiredUnAuth } from '@/lib/auth-utils'
 
-const RegisterPage = () => {
-	return (
-		<div>
-			<RegisterForm />
-		</div>
-	)
+const RegisterPage = async () => {
+	await requiredUnAuth()
+	return <RegisterForm />
 }
 
 export default RegisterPage

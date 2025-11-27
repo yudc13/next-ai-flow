@@ -1,7 +1,16 @@
-'use client'
-import { authClient } from '@/lib/auth-client'
+import { requiredAuth } from '@/lib/auth-utils'
+import SignOut from './sign-out'
+import { trpc } from '@/trpc/server'
 
-export default function Page() {
-	const { data } = authClient.useSession()
-	return <div>{JSON.stringify(data)}</div>
+export default async function Page() {
+	const session = await requiredAuth()
+	const user = await trpc.user()
+	return (
+		<div>
+			<pre>{JSON.stringify(user, null, 2)}</pre>
+			<div>
+				<SignOut />
+			</div>
+		</div>
+	)
 }
