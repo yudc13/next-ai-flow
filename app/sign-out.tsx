@@ -14,8 +14,9 @@ const SignOut = () => {
 			refetch()
 		},
 	})
+	const textAi = trpc.testAi.useMutation()
 	return (
-		<>
+		<div className="flex min-h-screen w-full flex-col items-center justify-center gap-4">
 			<pre>{JSON.stringify(data, null, 2)}</pre>
 			<Button
 				disabled={createWorkflow.isPending}
@@ -23,6 +24,10 @@ const SignOut = () => {
 			>
 				创建工作流
 			</Button>
+			<Button disabled={textAi.isPending} onClick={() => textAi.mutate()}>
+				测试AI
+			</Button>
+			<pre>{JSON.stringify(textAi.data, null, 2)}</pre>
 			<Button
 				disabled={isPending}
 				onClick={() =>
@@ -40,7 +45,7 @@ const SignOut = () => {
 			>
 				登出
 			</Button>
-		</>
+		</div>
 	)
 }
 
