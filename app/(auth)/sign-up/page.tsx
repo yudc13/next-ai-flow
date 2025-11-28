@@ -1,5 +1,3 @@
-'use client'
-
 import { RegisterForm } from '@/features/auth/register-form'
 import { requiredUnAuth } from '@/lib/auth-utils'
 

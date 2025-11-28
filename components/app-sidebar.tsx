@@ -21,7 +21,9 @@ import {
 } from './ui/sidebar'
 import Link from 'next/link'
 import Image from 'next/image'
-import { usePathname } from 'next/navigation'
+import { redirect, usePathname } from 'next/navigation'
+import { authClient } from '@/lib/auth-client'
+import { useHasActiveSubscription } from '@/features/subscriptions/hooks/use-subscription'
 
 const menuItems = [
 	{
@@ -36,6 +38,7 @@ const menuItems = [
 
 const AppSidebar = () => {
 	const currentPath = usePathname()
+	const { hasActiveSubscription, isLoading } = useHasActiveSubscription()
 
 	return (
 		<Sidebar collapsible="icon">
@@ -79,20 +82,34 @@ const AppSidebar = () => {
 				))}
 			</SidebarContent>
 			<SidebarFooter>
+				{!hasActiveSubscription && !isLoading && (
+					<SidebarMenuItem>
+						<SidebarMenuButton
+							onClick={() => authClient.checkout({ slug: 'pro' })}
+						>
+							<StarIcon className="h-4 w-4" />
+							<span>升级到PRO</span>
+						</SidebarMenuButton>
+					</SidebarMenuItem>
+				)}
 				<SidebarMenuItem>
-					<SidebarMenuButton>
-						<StarIcon className="h-4 w-4" />
-						<span>升级到PRO</span>
-					</SidebarMenuButton>
-				</SidebarMenuItem>
-				<SidebarMenuItem>
-					<SidebarMenuButton>
+					<SidebarMenuButton onClick={() => authClient.customer.portal()}>
 						<CreditCardIcon className="h-4 w-4" />
 						<span>充值</span>
 					</SidebarMenuButton>
 				</SidebarMenuItem>
 				<SidebarMenuItem>
-					<SidebarMenuButton>
+					<SidebarMenuButton
+						onClick={() =>
+							authClient.signOut({
+								fetchOptions: {
+									onSuccess: () => {
+										redirect('/sign-in')
+									},
+								},
+							})
+						}
+					>
 						<LogOutIcon className="h-4 w-4" />
 						<span>退出登录</span>
 					</SidebarMenuButton>
