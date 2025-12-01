@@ -11,3 +11,5 @@ pnpm dev
 # or
 bun dev
 ```
+
+## 项目架构
